@@ -1,0 +1,1041 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulador del ecosistema Bold</title>
+<style>
+:root{
+ --bg:#f3f5fa;--ink:#17223b;--muted:#637087;--line:#dce3ee;
+ --purple:#5735cf;--blue:#edf5ff;--green:#087c50;--red:#bd263d
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Arial,sans-serif}
+h1{font-size:24px;margin:0 0 5px}h2{font-size:18px;margin:0 0 12px}
+h3{font-size:14px;margin:16px 0 8px}p{margin:8px 0}
+button,input,select{font:inherit}
+button{padding:10px 13px;border:1px solid var(--line);border-radius:8px;
+ background:white;color:var(--ink);cursor:pointer}
+button.primary{background:var(--purple);border-color:var(--purple);color:white}
+button:disabled{opacity:.5;cursor:not-allowed}
+input,select{width:100%;min-width:0;padding:8px;border:1px solid #b5cce5;
+ border-radius:6px;background:var(--blue);color:#164d84}
+input:focus,select:focus,button:focus{outline:2px solid #aa9ce9;outline-offset:2px}
+input.invalid{border:2px solid var(--red);background:#fff0f2}
+input[type=checkbox]{width:auto}
+label{display:block;font-size:12px;color:var(--muted)}
+label input,label select{margin-top:5px}
+header{padding:20px 24px;background:var(--ink);color:white}
+.header-inner{max-width:1600px;margin:auto;display:flex;
+ justify-content:space-between;align-items:center;gap:16px}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.status{display:inline-block;margin-top:8px;padding:4px 9px;border-radius:20px;
+ background:#fff8e7;color:#72500b;font-size:12px}
+.status.ok{background:#eaf8f0;color:#125738}
+main{max-width:1650px;margin:auto;padding:20px 24px}
+.layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(370px,1fr);
+ gap:20px;align-items:start}
+.card{background:white;border:1px solid var(--line);border-radius:12px;
+ padding:18px;margin-bottom:18px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.note{padding:12px 15px;background:#fff8e7;border:1px solid #ecd69b;
+ border-radius:9px;margin-bottom:16px}
+.help{font-size:12px;color:var(--muted)}
+.highlight{margin-top:15px;padding:14px;border:1px solid #d9cdf7;
+ border-radius:9px;background:#f8f5ff}
+.estimate{margin-top:12px;padding:12px;border:1px solid var(--line);
+ border-radius:8px;background:white}
+.estimate strong{display:block;font-size:26px;color:var(--purple)}
+.scroll{overflow:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:12px}
+th,td{padding:8px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{text-align:left;background:#f0f3f9}
+td input{min-width:95px}
+.calc{text-align:right;background:#f8f9fc;white-space:nowrap;
+ font-variant-numeric:tabular-nums}
+tfoot td{background:#f0f3f9;font-weight:bold;white-space:nowrap}
+.brand-table{min-width:1400px}.cost-table{min-width:1200px}
+.pos-table{min-width:1150px}.concept{min-width:220px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{padding:13px;border:1px solid var(--line);border-radius:10px;background:#f8f9fd}
+.kpi small{display:block;margin-bottom:5px;color:var(--muted)}
+.kpi strong{display:block;font-size:22px;overflow-wrap:anywhere}
+.kpi.hero{grid-column:1/-1;background:#f0ebff;border-color:#d9cdf7}
+.kpi.hero strong{font-size:31px}
+.pos{color:var(--green)!important}.neg{color:var(--red)!important}
+.message{padding:12px;margin-top:12px;border-radius:8px;background:#f0f3f9}
+.line{display:flex;justify-content:space-between;gap:14px;
+ padding:9px 0;border-bottom:1px solid #edf0f5}
+.line strong{text-align:right}
+.error{padding:12px;margin-bottom:15px;background:#fff0f2;color:var(--red);
+ border:1px solid var(--red);border-radius:8px}
+canvas{display:block;width:100%;height:auto}
+details summary{font-weight:bold;cursor:pointer}
+fieldset{min-width:0;border:1px solid var(--line);border-radius:8px;margin-top:12px}
+fieldset:disabled{opacity:.55}
+.check{display:flex;align-items:center;gap:8px;color:var(--ink)}
+.check input{margin:0}
+footer{font-size:12px;color:var(--muted);padding:10px 0 20px}
+.print-only{display:none}[hidden]{display:none!important}
+@media(max-width:1150px){.layout{grid-template-columns:1fr}}
+@media(max-width:600px){
+ main{padding:14px}header{padding:18px 14px}
+ .header-inner{flex-direction:column;align-items:flex-start}
+ .fields{grid-template-columns:1fr}.kpi strong{font-size:19px}
+}
+@page{size:A4;margin:11mm}
+@media print{
+ body{background:white;font-size:9px;color:#17223b}
+ .screen-only{display:none!important}.print-only{display:block}
+ .print-only h1{font-size:20px}
+ .print-only h2{font-size:12px;margin:10px 0 5px;break-after:avoid}
+ .print-only p{margin:5px 0}
+ .print-head{border-bottom:2px solid #5735cf;padding-bottom:7px}
+ .print-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:9px 0}
+ .print-box{padding:9px;border:1px solid #dce3ee;border-radius:7px;break-inside:avoid}
+ .print-value{font-size:23px;font-weight:bold}
+ .pdf-table{width:100%;table-layout:fixed;border-collapse:collapse;font-size:8.5px}
+ .pdf-table th,.pdf-table td{
+  padding:5px 4px;border-bottom:1px solid #dce3ee;
+  vertical-align:top;white-space:normal;overflow-wrap:anywhere
+ }
+ .pdf-table th:first-child,.pdf-table td:first-child{text-align:left}
+ .pdf-table th:not(:first-child),.pdf-table td:not(:first-child){
+  text-align:right;font-variant-numeric:tabular-nums
+ }
+ .pdf-table thead{display:table-header-group}
+ .pdf-table tr{break-inside:avoid}
+ .legal{font-size:8px;margin-top:10px}
+ *{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div id="app">
+ <div class="note">
+  Preparando simulador… Si este mensaje no cambia, abre el archivo
+  en un navegador que permita ejecutar JavaScript.
+ </div>
+</div>
+<noscript><div class="note">Activa JavaScript para utilizar el simulador.</div></noscript>
+<script>
+(function(){
+"use strict";
+const root=document.getElementById("app");
+if(!root)return;
+
+function make(tag,parent,cls,text){
+ const e=document.createElement(tag);
+ if(cls)e.className=cls;
+ if(text!==undefined)e.textContent=text;
+ if(parent)parent.appendChild(e);
+ return e;
+}
+let errorBox,status,pdfButton,printArea,current=null;
+
+function report(error){
+ current=null;
+ const message=error && error.message ? error.message : String(error);
+ if(errorBox){errorBox.hidden=false;errorBox.textContent="Error: "+message;}
+ else make("div",root,"error",message);
+ if(status){status.textContent="Error de ejecución";status.className="status";}
+ if(pdfButton)pdfButton.disabled=true;
+ if(printArea)printArea.textContent="Simulación no disponible.";
+ console.error(error);
+}
+
+try{initialize();}catch(error){report(error);}
+
+function initialize(){
+ root.textContent="";
+ const BRANDS=["Visa","Mastercard","Amex","Diners","Débito nacional","Otras"];
+ const SERVICES=[
+  "Portal transaccional (mensualidad)","Cuota de manejo de tarjeta",
+  "Pagos ACH / transferencias a otras cuentas","Pagos a proveedores",
+  "Pago de nómina","Alquiler de datáfonos","Cuota de manejo de cuenta",
+  "Instalación, mantenimiento o soporte de datáfono",
+  "Retiros, consultas o extractos","Otros"
+ ];
+ const POS=["Licencia o suscripción POS","Módulos adicionales o integraciones",
+  "Soporte o mantenimiento POS"];
+ const LEGAL="Simulación informativa basada en los datos suministrados por el comercio. "+
+  "No constituye oferta vinculante.";
+ const nf=new Intl.NumberFormat("es-CO",{maximumFractionDigits:0});
+ const df=new Intl.NumberFormat("es-CO",{maximumFractionDigits:2});
+ const pf=new Intl.NumberFormat("es-CO",{minimumFractionDigits:2,maximumFractionDigits:2});
+ const money=n=>(n < -0.005?"−":"")+"$ "+nf.format(Math.abs(n));
+ const pct=n=>pf.format(n)+"%";
+ const numericFields=[];
+ let exampleMode=false,previousTitle=null;
+
+ function numeric(parent,label,initial="",max=1e12,config=false,integer=false){
+  const e=make("input",parent);
+  e.type="text";e.inputMode=integer?"numeric":"decimal";e.value=initial;
+  e.placeholder="0";e.setAttribute("aria-label",label);
+  numericFields.push({input:e,label,max,config,integer});return e;
+ }
+ function val(input){
+  const s=input.value.trim();return s===""?0:Number(s.replace(",","."));
+ }
+ function label(parent,title){return make("label",parent,"",title);}
+ function button(parent,title,primary=false){
+  const e=make("button",parent,primary?"primary":"",title);e.type="button";return e;
+ }
+ function card(parent,title){
+  const e=make("section",parent,"card");make("h2",e,"",title);return e;
+ }
+ function table(parent,headers,cls=""){
+  const t=make("table",make("div",parent,"scroll"),cls);
+  const row=make("tr",make("thead",t));
+  headers.forEach(h=>make("th",row,"",h));
+  return {body:make("tbody",t),foot:make("tfoot",t)};
+ }
+ function cell(row){return make("td",row,"calc","$ 0");}
+ function cash(e,n,signed=false){
+  e.textContent=money(n);e.classList.remove("pos","neg");
+  if(signed && n>0.005)e.classList.add("pos");
+  if(signed && n < -0.005)e.classList.add("neg");
+ }
+ function blank(e){e.textContent="—";e.classList.remove("pos","neg");}
+ function guard(fn){return function(){try{fn();}catch(e){invalidate("Error de ejecución.");report(e);}};}
+
+ const screen=make("div",root,"screen-only");
+ const head=make("div",make("header",screen),"header-inner");
+ const title=make("div",head);
+ make("h1",title,"","Simulador del ecosistema Bold");
+ make("div",title,"","V6 · Pagos + servicios + POS + rentabilidad");
+ status=make("span",title,"status","Iniciando…");
+ const actions=make("div",head,"actions");
+ const exampleButton=button(actions,"Cargar ejemplo");
+ const clearButton=button(actions,"Limpiar datos");
+ const testButton=button(actions,"Verificar cálculos");
+ pdfButton=button(actions,"Exportar PDF",true);pdfButton.disabled=true;
+
+ const main=make("main",screen);
+ make("div",main,"note",
+  "Valores en COP, sin impuestos ni retenciones. Tasas de rentabilidad en E.A. "+
+  "No se precargan condiciones oficiales. Los ejemplos son ficticios. "+
+  "Cargar ejemplo y limpiar datos reemplazan las entradas actuales.");
+ errorBox=make("div",main,"error");errorBox.hidden=true;errorBox.setAttribute("role","alert");
+ const layout=make("div",main,"layout"),left=make("div",layout),right=make("aside",layout);
+
+ // 1. Comercio.
+ const commerce=card(left,"1. Datos del comercio");
+ const fields=make("div",commerce,"fields");
+ const merchant=make("input",label(fields,"Nombre del comercio"));
+ const executive=make("input",label(fields,"Ejecutivo"));
+ const bank=make("input",label(fields,"Banco / proveedor actual"));
+ [merchant,executive,bank].forEach(e=>e.maxLength=100);
+ const date=make("input",label(fields,"Fecha"));date.type="date";
+ const horizon=make("select",label(fields,"Horizonte"));
+ [12,24,36].forEach(n=>{const o=make("option",horizon,"",n+" meses");o.value=n;});
+ const growth=numeric(label(fields,"Crecimiento mensual de ventas (%)"),"Crecimiento","0",100);
+ const basePanel=make("div",commerce,"highlight"),baseFields=make("div",basePanel,"fields");
+ const declared=numeric(label(baseFields,"Total mensual procesado con tarjetas"),"Total procesado");
+ const ticket=numeric(label(baseFields,"Ticket promedio de pagos con tarjeta"),"Ticket promedio");
+ const estimateBox=make("div",basePanel,"estimate");
+ make("div",estimateBox,"","Pagos mensuales estimados");
+ const estimate=make("strong",estimateBox,"","0");
+ const allocation=make("p",basePanel,"help");
+ make("p",commerce,"help",
+  "Dinero sin separadores de miles: 1000000. Decimales con coma o punto: 2,29 o 2.29. "+
+  "Pagos = total ÷ ticket. Ticket exclusivo de ventas con tarjeta.");
+
+ // 2. Comisiones.
+ const paymentsCard=card(left,"2. Comisiones por franquicia");
+ make("p",paymentsCard,"help",
+  "Costo = volumen × tarifa / 100 + pagos estimados × cargo fijo. "+
+  "Pagos por franquicia = volumen ÷ ticket. Desplaza la tabla horizontalmente.");
+ const bt=table(paymentsCard,[
+  "Franquicia","Volumen mensual","Pagos estimados","Actual %","Fijo actual / pago",
+  "Bold %","Fijo Bold / pago","Costo actual","Costo Bold","Actual − Bold"
+ ],"brand-table");
+ const brandUI=BRANDS.map(name=>{
+  const row=make("tr",bt.body);make("td",row,"",name);
+  const volume=numeric(make("td",row),name+": volumen"),payments=cell(row);
+  return {name,volume,payments,
+   rateA:numeric(make("td",row),name+": tarifa actual","",10),
+   fixedA:numeric(make("td",row),name+": fijo actual"),
+   rateB:numeric(make("td",row),name+": tarifa Bold","",10),
+   fixedB:numeric(make("td",row),name+": fijo Bold"),
+   costA:cell(row),costB:cell(row),diff:cell(row)};
+ });
+ const bf=make("tr",bt.foot);make("td",bf,"","Total / efectiva");
+ const sumVolume=cell(bf),sumPayments=cell(bf),effectiveA=cell(bf);
+ make("td",bf);const effectiveB=cell(bf);make("td",bf);
+ const commissionAOut=cell(bf),commissionBOut=cell(bf),commissionDiffOut=cell(bf);
+ make("p",paymentsCard,"help",
+  "La tarifa efectiva incluye cargos fijos. Un campo vacío equivale a cero. "+
+  "Las transacciones fraccionarias son estimaciones, no conteos reales.");
+
+ // 3. Servicios.
+ const servicesCard=card(left,"3. Costos asociados · 10 filas");
+ make("p",servicesCard,"help",
+  "Frecuencia 1 para mensualidades; número de equipos para datáfonos. "+
+  "No dupliques aquí el software POS del módulo 4.");
+ const list=make("datalist",servicesCard);list.id="service-concepts";
+ SERVICES.forEach(s=>{const o=make("option",list);o.value=s;});
+ const st=table(servicesCard,["Concepto","Frecuencia","Unitario actual","Unitario Bold",
+  "Mensual actual","Mensual Bold","Ahorro mensual","Ahorro anual"],"cost-table");
+ const serviceUI=SERVICES.map((name,i)=>{
+  const row=make("tr",st.body),concept=make("input",make("td",row),"concept");
+  concept.value=name;concept.maxLength=100;concept.setAttribute("list",list.id);
+  return {concept,
+   frequency:numeric(make("td",row),"Servicio "+(i+1)+": frecuencia","",1e9),
+   unitA:numeric(make("td",row),"Servicio "+(i+1)+": actual"),
+   unitB:numeric(make("td",row),"Servicio "+(i+1)+": Bold","0"),
+   costA:cell(row),costB:cell(row),diff:cell(row),annual:cell(row)};
+ });
+ const sf=make("tr",st.foot);make("td",sf,"","Total servicios").colSpan=4;
+ const serviceAOut=cell(sf),serviceBOut=cell(sf),serviceDiffOut=cell(sf),serviceAnnualOut=cell(sf);
+
+ // 4. POS.
+ const posCard=card(left,"4. Software POS");
+ make("p",posCard,"help",
+  "Solo costos recurrentes mensuales. Usa cantidad 1 para un cobro mensual general. "+
+  "No incluye compra de equipos ni implementación. Evita duplicar datáfonos.");
+ const pt=table(posCard,["Concepto","Cantidad actual","Mensual unitario actual",
+  "Cantidad Bold","Mensual unitario Bold","Mensual actual","Mensual Bold","Ahorro"],"pos-table");
+ const posUI=POS.map((name,i)=>{
+  const row=make("tr",pt.body),concept=make("input",make("td",row),"concept");
+  concept.value=name;concept.maxLength=100;
+  return {concept,
+   quantityA:numeric(make("td",row),"POS "+(i+1)+": cantidad actual","0",1e9),
+   unitA:numeric(make("td",row),"POS "+(i+1)+": precio actual","0"),
+   quantityB:numeric(make("td",row),"POS "+(i+1)+": cantidad Bold","0",1e9),
+   unitB:numeric(make("td",row),"POS "+(i+1)+": precio Bold","0"),
+   costA:cell(row),costB:cell(row),diff:cell(row)};
+ });
+ const pfoot=make("tr",pt.foot);make("td",pfoot,"","Total POS").colSpan=5;
+ const posAOut=cell(pfoot),posBOut=cell(pfoot),posDiffOut=cell(pfoot);
+
+ // 5. Rentabilidad.
+ const yieldCard=card(left,"5. Rentabilidad de cuenta e inversión");
+ make("div",yieldCard,"note",
+  "Compara el mismo capital entre proveedores. El saldo del Bolsillo y el capital "+
+  "del CDT deben ser montos separados: no asignes el mismo dinero simultáneamente "+
+  "a ambos productos. Los rendimientos son ingresos, no descuentos de comisiones.");
+
+ make("h3",yieldCard,"","Bolsillo · saldo disponible");
+ const pocketFields=make("div",yieldCard,"fields");
+ const pocketCapital=numeric(label(pocketFields,"Saldo promedio mensual (mismo monto en ambos)"),"Saldo Bolsillo","0");
+ const pocketRateA=numeric(label(pocketFields,"Rentabilidad actual (% E.A.)"),"Tasa Bolsillo actual","0",100);
+ const pocketRateB=numeric(label(pocketFields,"Rentabilidad Bold (% E.A.)"),"Tasa Bolsillo Bold","0",100);
+ make("p",yieldCard,"help",
+  "Supuesto: saldo promedio constante, tasa constante y sin reinvertir intereses. "+
+  "Se calcula la tasa mensual equivalente: (1 + E.A.)^(1/12) − 1. "+
+  "La disponibilidad inmediata del Bolsillo debe confirmarse en las condiciones "+
+  "vigentes del producto; esta herramienta no garantiza liquidez ni tasas.");
+ const pocketSummary=make("div",yieldCard,"message");
+
+ make("h3",yieldCard,"","CDT · tasa fija durante el plazo");
+ const cdtFields=make("div",yieldCard,"fields");
+ const cdtCapital=numeric(label(cdtFields,"Capital del CDT (mismo monto en ambos)"),"Capital CDT","0");
+ const cdtDays=numeric(label(cdtFields,"Plazo común en días"),"Plazo CDT","180",36500,false,true);
+ const cdtRateA=numeric(label(cdtFields,"Tasa actual (% E.A.)"),"Tasa CDT actual","0",100);
+ const cdtRateB=numeric(label(cdtFields,"Tasa Bold (% E.A.)"),"Tasa CDT Bold","0",100);
+ make("p",yieldCard,"help",
+  "Rendimiento al vencimiento = capital × [(1 + E.A.)^(días/365) − 1]. "+
+  "Equivalente mensual = rendimiento del plazo × 365 / días / 12. "+
+  "No representa un pago mensual. Se supone pago al vencimiento, "+
+  "sin retiros anticipados ni renovación automática. "+
+  "El plazo y capital son iguales para comparar tasas.");
+ const cdtSummary=make("div",yieldCard,"message");
+ const capitalSummary=make("p",yieldCard,"help");
+
+ // Configuración opcional.
+ const cfgCard=make("section",left,"card"),details=make("details",cfgCard);
+ make("summary",details,"","Configuración de tarifas Bold predeterminadas");
+ make("p",details,"help",
+  "Panel contra cambios accidentales, no autenticación. "+
+  "Solo modifica tarifas de procesamiento al pulsar Aplicar. No son tasas oficiales.");
+ const unlockLabel=make("label",details,"check"),unlock=make("input",unlockLabel);
+ unlock.type="checkbox";make("span",unlockLabel,"","Habilitar edición");
+ const cfgFields=make("fieldset",details);cfgFields.disabled=true;
+ const cfgTable=table(cfgFields,["Franquicia","Tarifa %","Fijo por pago"]);
+ const cfgUI=BRANDS.map(name=>{
+  const row=make("tr",cfgTable.body);make("td",row,"",name);
+  return {
+   rate:numeric(make("td",row),name+": predeterminado %","",10,true),
+   fixed:numeric(make("td",row),name+": predeterminado fijo","",1e12,true)};
+ });
+ const applyButton=button(cfgFields,"Aplicar a las franquicias");
+ const cfgStatus=make("p",cfgFields,"help");
+
+ // Resultados.
+ const results=card(right,"Resultado integral");
+ const basis=make("p",results,"help");
+ const kpis=make("div",results,"kpis");
+ function kpi(title,hero=false){
+  const box=make("div",kpis,hero?"kpi hero":"kpi");
+  return {box,caption:make("small",box,"",title),amount:make("strong",box,"","$ 0")};
+ }
+ const grossAUI=kpi("Costo operativo actual · mensual");
+ const grossBUI=kpi("Costo operativo Bold · mensual");
+ const integralUI=kpi("Beneficio integral mensual equivalente",true);
+ const annualUI=kpi("Beneficio integral · primeros 12 meses");
+ const horizonUI=kpi("Beneficio integral acumulado");
+ const commercial=make("div",results,"message");
+ commercial.setAttribute("role","status");commercial.setAttribute("aria-live","polite");
+ const warningsUI=make("p",results,"help");
+
+ make("h3",results,"","Comparación mensual");
+ const rt=table(results,["Componente","Actual","Bold"]);
+ function resultRow(title){
+  const row=make("tr",rt.body);make("td",row,"",title);
+  return {a:cell(row),b:cell(row)};
+ }
+ const rbCommission=resultRow("Comisiones");
+ const rbServices=resultRow("Servicios");
+ const rbPos=resultRow("POS");
+ const rbPocket=resultRow("Rendimiento Bolsillo");
+ const rbCdt=resultRow("CDT · equivalente mensual");
+ const rbNet=resultRow("Costo menos rendimientos · equivalente");
+ make("p",results,"help",
+  "Costo menos rendimientos = costos operativos − ingresos financieros equivalentes. "+
+  "Puede ser negativo si los rendimientos superan los costos; no es una comisión negativa. "+
+  "El equivalente CDT no implica cobro ni disponibilidad mensual.");
+
+ make("h3",results,"","Desglose del beneficio");
+ function resultLine(title){
+  const row=make("div",results,"line");
+  return {caption:make("span",row,"",title),amount:make("strong",row,"","$ 0")};
+ }
+ const opSavingUI=resultLine("Ahorro operativo mensual");
+ const pocketDiffUI=resultLine("Rendimiento adicional Bolsillo / mes");
+ const cdtDiffUI=resultLine("Rendimiento adicional CDT / mes equivalente");
+ const opportunityUI=resultLine("Oportunidad de rendimiento frente a Bold");
+ make("p",results,"help",
+  "La oportunidad de rendimiento es el ingreso adicional estimado de Bold "+
+  "cuando es positivo. Ya forma parte del beneficio integral: no se suma otra vez. "+
+  "Si el banco actual remunera mejor, se muestra la desventaja con signo negativo.");
+
+ make("h3",results,"","Punto de equilibrio operativo");
+ const equilibriumUI=make("div",results,"message");
+ make("p",results,"help",
+  "Solo pagos + servicios + POS. Excluye rendimientos de cuenta e inversión. "+
+  "Mantiene ticket, mezcla y tarifas; servicios y POS constantes.");
+
+ const projectionNote=make("p",results,"help",
+  "Proyección: ventas y pagos crecen. Servicios, POS y saldo Bolsillo constantes. "+
+  "CDT sin renovación: se atribuye su rendimiento linealmente durante el plazo, "+
+  "hasta el vencimiento, y después no genera más intereses en la simulación. "+
+  "Es una atribución analítica, no una promesa de rescate o cobro mensual.");
+ const exportHelp=make("p",results,"help");
+ exportHelp.setAttribute("role","status");
+ const testStatus=make("p",results,"help");
+
+ function chart(title){
+  const c=make("canvas",card(right,title));
+  c.width=600;c.height=240;c.setAttribute("role","img");c.setAttribute("aria-label",title);
+  return c;
+ }
+ const costCanvas=chart("Costos operativos mensuales");
+ const yieldCanvas=chart("Rendimientos mensuales equivalentes");
+ const lineCanvas=chart("Beneficio integral acumulado");
+ const footer=make("footer",main);
+ make("strong",footer,"",LEGAL);
+ make("p",footer,"",
+  "Rendimientos brutos, sin impuestos ni retenciones. No incluye costos financieros "+
+  "no ingresados. Confirma condiciones, elegibilidad y disponibilidad de los productos. "+
+  "Datos solo en memoria: se pierden al recargar. No se envían a servidores.");
+ printArea=make("section",root,"print-only");
+ printArea.textContent="Completa una simulación válida antes de imprimir.";
+
+ function validate(config){
+  const errors=[];
+  numericFields.filter(item=>item.config===config).forEach(item=>{
+   const s=item.input.value.trim(),n=val(item.input);
+   const ok=(s==="" || /^\d+(?:[.,]\d*)?$/.test(s)) &&
+    Number.isFinite(n) && n>=0 && n<=item.max &&
+    (!item.integer || Number.isInteger(n));
+   item.input.classList.toggle("invalid",!ok);
+   item.input.setAttribute("aria-invalid",String(!ok));
+   if(!ok)errors.push(item.label+": número entre 0 y "+nf.format(item.max)+
+    (item.integer?", sin decimales":"")+", sin separadores de miles.");
+  });return errors;
+ }
+
+ function read(){
+  return {
+   merchant:merchant.value.trim()||"Comercio sin nombre",
+   executive:executive.value.trim()||"Sin especificar",
+   bank:bank.value.trim()||"Proveedor actual",date:date.value,
+   declared:val(declared),ticket:val(ticket),growth:val(growth)/100,horizon:Number(horizon.value),
+   brands:brandUI.map(r=>({name:r.name,volume:val(r.volume),
+    rateA:val(r.rateA)/100,rateB:val(r.rateB)/100,fixedA:val(r.fixedA),fixedB:val(r.fixedB)})),
+   costs:serviceUI.map((r,i)=>({name:r.concept.value.trim()||SERVICES[i],
+    frequency:val(r.frequency),unitA:val(r.unitA),unitB:val(r.unitB)})),
+   pos:posUI.map((r,i)=>({name:r.concept.value.trim()||POS[i],
+    quantityA:val(r.quantityA),quantityB:val(r.quantityB),unitA:val(r.unitA),unitB:val(r.unitB)})),
+   pocket:{capital:val(pocketCapital),rateA:val(pocketRateA)/100,rateB:val(pocketRateB)/100},
+   cdt:{capital:val(cdtCapital),days:val(cdtDays),rateA:val(cdtRateA)/100,rateB:val(cdtRateB)/100}
+  };
+ }
+
+ // Motor matemático: tasas en fracción, base 365, sin redondeos intermedios.
+ function calculate(d){
+  const sum=(items,key)=>items.reduce((s,x)=>s+x[key],0);
+  const brands=d.brands.map(b=>{
+   const payments=d.ticket>0?b.volume/d.ticket:0;
+   const costA=b.volume*b.rateA+payments*b.fixedA;
+   const costB=b.volume*b.rateB+payments*b.fixedB;
+   return {...b,payments,costA,costB,diff:costA-costB};
+  });
+  const costs=d.costs.map(c=>({...c,costA:c.frequency*c.unitA,
+   costB:c.frequency*c.unitB,diff:c.frequency*(c.unitA-c.unitB)}));
+  const pos=d.pos.map(p=>{
+   const costA=p.quantityA*p.unitA,costB=p.quantityB*p.unitB;
+   return {...p,costA,costB,diff:costA-costB};
+  });
+  const volume=sum(brands,"volume"),payments=sum(brands,"payments");
+  const commissionA=sum(brands,"costA"),commissionB=sum(brands,"costB");
+  const serviceA=sum(costs,"costA"),serviceB=sum(costs,"costB");
+  const posA=sum(pos,"costA"),posB=sum(pos,"costB");
+  const fixedSaving=serviceA-serviceB+posA-posB;
+  const totalA=commissionA+serviceA+posA,totalB=commissionB+serviceB+posB;
+  const opSaving=totalA-totalB;
+  const pocketA=d.pocket.capital*(Math.pow(1+d.pocket.rateA,1/12)-1);
+  const pocketB=d.pocket.capital*(Math.pow(1+d.pocket.rateB,1/12)-1);
+  const termA=d.cdt.capital*(Math.pow(1+d.cdt.rateA,d.cdt.days/365)-1);
+  const termB=d.cdt.capital*(Math.pow(1+d.cdt.rateB,d.cdt.days/365)-1);
+  const cdtA=d.cdt.days>0?termA*365/d.cdt.days/12:0;
+  const cdtB=d.cdt.days>0?termB*365/d.cdt.days/12:0;
+  const pocketDiff=pocketB-pocketA,cdtDiff=cdtB-cdtA;
+  const yieldA=pocketA+cdtA,yieldB=pocketB+cdtB;
+  const netA=totalA-yieldA,netB=totalB-yieldB;
+  const integral=opSaving+pocketDiff+cdtDiff;
+  let accumulated=0;
+  const months=[];
+  for(let n=1;n<=d.horizon;n++){
+   const factor=Math.pow(1+d.growth,n-1);
+   const op=(commissionA-commissionB)*factor+fixedSaving;
+   const start=(n-1)*365/12,end=n*365/12;
+   const fraction=d.cdt.days>0 ?
+    (Math.min(end,d.cdt.days)-Math.min(start,d.cdt.days))/d.cdt.days:0;
+   const cdtAccrued=(termB-termA)*fraction;
+   const benefit=op+pocketDiff+cdtAccrued;
+   accumulated+=benefit;
+   months.push({n,op,pocketDiff,cdtAccrued,benefit,accumulated});
+  }
+  return {
+   brands,costs,pos,volume,payments,commissionA,commissionB,serviceA,serviceB,
+   posA,posB,fixedSaving,totalA,totalB,opSaving,
+   pocketA,pocketB,pocketDiff,termA,termB,cdtA,cdtB,cdtDiff,yieldA,yieldB,
+   netA,netB,integral,months,annual:months[11].accumulated,accumulated,
+   differenceRate:volume>0?(commissionB-commissionA)/volume:null,
+   missingTicket:d.ticket<=0 && d.brands.some(b=>b.volume>0&&(b.fixedA>0||b.fixedB>0))
+  };
+ }
+
+ function equilibrium(r){
+  const d=r.differenceRate,f=r.fixedSaving;
+  if(r.missingTicket)return "Falta ticket promedio.";
+  if(d===null)return "Ingresa ventas por franquicia para calcularlo.";
+  if(Math.abs(d)<1e-12){
+   if(f>0.005)return "Sin cruce: Bold ahorra para cualquier volumen con estos supuestos.";
+   if(f< -0.005)return "Sin cruce: Bold cuesta más para cualquier volumen con estos supuestos.";
+   return "Costos operativos equivalentes para cualquier volumen.";
+  }
+  if(d>0){
+   if(f>0.005)return "Equilibrio en "+money(f/d)+
+    " mensuales. Bold ahorra por debajo y cuesta más por encima: máximo de conveniencia.";
+   if(Math.abs(f)<=0.005)return "Equilibrio en ventas cero. Con ventas positivas Bold cuesta más.";
+   return "No hay equilibrio positivo: Bold cuesta más en comisión y costos fijos.";
+  }
+  if(f< -0.005)return "Equilibrio en "+money(f/d)+
+   " mensuales. Bold ahorra por encima: mínimo de conveniencia.";
+  return "Bold ahorra con ventas positivas bajo estos supuestos.";
+ }
+
+ function message(r){
+  if(r.totalA===0&&r.totalB===0&&r.yieldA===0&&r.yieldB===0)
+   return "Completa los datos o carga el ejemplo.";
+  let s="Ahorro operativo mensual: "+money(r.opSaving)+
+   ". Rendimiento adicional mensual equivalente: "+money(r.pocketDiff+r.cdtDiff)+
+   ". Beneficio integral equivalente: "+money(r.integral)+".";
+  if(r.opSaving< -0.005)s+=" Bold cuesta más en operación; el rendimiento no elimina ese cobro.";
+  if(r.integral< -0.005)s+=" Con estos datos, el resultado integral favorece al proveedor actual.";
+  s+=" El CDT se paga al vencimiento, no cada mes.";
+  return s;
+ }
+
+ function warnings(d,r){
+  const reasons=[],notes=[];
+  const mismatch=Math.abs(d.declared-r.volume)>0.01;
+  if(mismatch){
+   notes.push("PROVISIONAL: el total declarado no coincide con las franquicias; "+
+    "los costos usan el módulo 2.");
+   reasons.push("conciliar el total y las franquicias");
+  }
+  if(d.ticket<=0&&(d.declared>0||r.volume>0)){
+   notes.push("Falta ticket promedio.");reasons.push("ingresar ticket promedio");
+  }
+  const missingRates=d.brands.some((b,i)=>b.volume>0&&
+   (brandUI[i].rateA.value.trim()===""||brandUI[i].rateB.value.trim()===""));
+  if(missingRates){
+   notes.push("Tarifas vacías con ventas se calculan como 0%.");
+   reasons.push("completar tarifas de pagos; escribe 0 si corresponde");
+  }
+  if(d.costs.some(c=>c.frequency===0&&(c.unitA>0||c.unitB>0)))
+   notes.push("Hay servicios con precio pero sin frecuencia.");
+  if(d.pos.some(p=>(p.unitA>0&&p.quantityA===0)||(p.unitB>0&&p.quantityB===0)))
+   notes.push("Hay POS con precio pero sin cantidad.");
+  if(d.pocket.capital>0&&(pocketRateA.value.trim()===""||pocketRateB.value.trim()===""))
+   reasons.push("completar tasas Bolsillo; escribe 0 si no remunera");
+  if(d.cdt.capital>0&&(cdtRateA.value.trim()===""||cdtRateB.value.trim()===""))
+   reasons.push("completar tasas CDT; escribe 0 si corresponde");
+  if(d.cdt.capital>0&&d.cdt.days<=0)reasons.push("ingresar plazo CDT mayor que cero");
+  if(r.totalA===0&&r.totalB===0&&d.pocket.capital===0&&d.cdt.capital===0)
+   reasons.push("ingresar costos o capital para comparar");
+  if(exampleMode)notes.push("Ejemplo ficticio, no tasas oficiales.");
+  return {reasons,notes:notes.join(" "),mismatch};
+ }
+
+ function ctx(canvas,height){
+  canvas.height=height;
+  const c=canvas.getContext("2d");
+  if(c){c.clearRect(0,0,600,height);c.font="13px Arial";c.fillStyle="#637087";}
+  return c;
+ }
+ function compact(n){
+  const s=n<0?"−":"",a=Math.abs(n);
+  if(a>=1e9)return s+"$"+df.format(a/1e9)+" mil M";
+  if(a>=1e6)return s+"$"+df.format(a/1e6)+" M";
+  if(a>=1000)return s+"$"+df.format(a/1000)+" mil";
+  return s+"$"+nf.format(a);
+ }
+ function pendingCharts(){
+  [costCanvas,yieldCanvas,lineCanvas].forEach(c=>{
+   const x=ctx(c,90);if(x)x.fillText("Completa o corrige los datos.",12,42);
+  });
+ }
+ function drawBars(canvas,a,b){
+  const c=ctx(canvas,155);if(!c)return;
+  const max=Math.max(a,b,1);
+  [{name:"Actual",n:a,color:"#8995b3",y:25},
+   {name:"Bold",n:b,color:"#5735cf",y:88}].forEach(x=>{
+    const width=260*x.n/max;
+    c.fillStyle="#637087";c.fillText(x.name,8,x.y+21);
+    c.fillStyle=x.color;c.fillRect(75,x.y,width,32);
+    c.fillStyle="#17223b";c.fillText(money(x.n),85+width,x.y+21);
+   });
+  canvas.setAttribute("aria-label","Actual "+money(a)+". Bold "+money(b));
+ }
+ function drawCharts(d,r){
+  drawBars(costCanvas,r.totalA,r.totalB);
+  drawBars(yieldCanvas,r.yieldA,r.yieldB);
+  const c=ctx(lineCanvas,250);if(!c)return;
+  const values=[0,...r.months.map(m=>m.accumulated)];
+  let min=Math.min(...values),max=Math.max(...values);
+  if(max-min<1){min-=1;max+=1;}
+  const pad=(max-min)*0.08;min-=pad;max+=pad;
+  const X=n=>105+n/d.horizon*460,Y=n=>20+(max-n)/(max-min)*180;
+  for(let i=0;i<=4;i++){
+   const n=min+(max-min)*i/4,y=Y(n);
+   c.strokeStyle="#e1e6ef";c.beginPath();c.moveTo(105,y);c.lineTo(565,y);c.stroke();
+   c.textAlign="right";c.fillStyle="#637087";c.fillText(compact(n),96,y+4);
+  }
+  c.strokeStyle="#a2acc0";c.beginPath();c.moveTo(105,Y(0));c.lineTo(565,Y(0));c.stroke();
+  c.strokeStyle="#5735cf";c.lineWidth=3;c.beginPath();
+  values.forEach((n,i)=>i===0?c.moveTo(X(i),Y(n)):c.lineTo(X(i),Y(n)));
+  c.stroke();c.textAlign="center";c.fillStyle="#637087";
+  [0,d.horizon/2,d.horizon].forEach(n=>c.fillText("Mes "+n,X(n),230));
+  lineCanvas.setAttribute("aria-label","Beneficio integral acumulado "+money(r.accumulated));
+ }
+
+ const outputCells=[
+  sumVolume,sumPayments,effectiveA,effectiveB,commissionAOut,commissionBOut,commissionDiffOut,
+  serviceAOut,serviceBOut,serviceDiffOut,serviceAnnualOut,posAOut,posBOut,posDiffOut,
+  grossAUI.amount,grossBUI.amount,integralUI.amount,annualUI.amount,horizonUI.amount,
+  opSavingUI.amount,pocketDiffUI.amount,cdtDiffUI.amount,opportunityUI.amount,
+  ...[rbCommission,rbServices,rbPos,rbPocket,rbCdt,rbNet].flatMap(r=>[r.a,r.b])
+ ];
+ function invalidate(s){
+  current=null;outputCells.forEach(blank);
+  brandUI.forEach(r=>[r.payments,r.costA,r.costB,r.diff].forEach(blank));
+  serviceUI.forEach(r=>[r.costA,r.costB,r.diff,r.annual].forEach(blank));
+  posUI.forEach(r=>[r.costA,r.costB,r.diff].forEach(blank));
+  pocketSummary.textContent="Cálculo pendiente.";cdtSummary.textContent="Cálculo pendiente.";
+  commercial.textContent=s;warningsUI.textContent="";
+  exportHelp.textContent="PDF no disponible: corrige los datos.";
+  equilibriumUI.textContent="Completa o corrige los datos.";
+  pdfButton.disabled=true;printArea.textContent="Simulación no disponible: "+s;
+  pendingCharts();
+ }
+
+ function render(d,r,w){
+  r.brands.forEach((b,i)=>{
+   const row=brandUI[i];
+   row.payments.textContent=d.ticket>0?df.format(b.payments):"—";
+   const missing=d.ticket<=0&&b.volume>0&&(b.fixedA>0||b.fixedB>0);
+   if(missing)[row.costA,row.costB,row.diff].forEach(e=>{blank(e);e.textContent="Falta ticket";});
+   else{cash(row.costA,b.costA);cash(row.costB,b.costB);cash(row.diff,b.diff,true);}
+  });
+  r.costs.forEach((c,i)=>{
+   cash(serviceUI[i].costA,c.costA);cash(serviceUI[i].costB,c.costB);
+   cash(serviceUI[i].diff,c.diff,true);cash(serviceUI[i].annual,c.diff*12,true);
+  });
+  r.pos.forEach((p,i)=>{
+   cash(posUI[i].costA,p.costA);cash(posUI[i].costB,p.costB);cash(posUI[i].diff,p.diff,true);
+  });
+  cash(sumVolume,r.volume);
+  sumPayments.textContent=d.ticket>0?df.format(r.payments):"—";
+  cash(serviceAOut,r.serviceA);cash(serviceBOut,r.serviceB);
+  cash(serviceDiffOut,r.serviceA-r.serviceB,true);
+  cash(serviceAnnualOut,(r.serviceA-r.serviceB)*12,true);
+  cash(posAOut,r.posA);cash(posBOut,r.posB);cash(posDiffOut,r.posA-r.posB,true);
+
+  pocketSummary.textContent="Rendimiento mensual estimado — Actual: "+money(r.pocketA)+
+   " · Bold: "+money(r.pocketB)+" · Diferencia: "+money(r.pocketDiff)+".";
+  cdtSummary.textContent="Rendimiento al vencimiento — Actual: "+money(r.termA)+
+   " · Bold: "+money(r.termB)+" · Diferencia: "+money(r.termB-r.termA)+
+   ". Equivalente mensual — Actual: "+money(r.cdtA)+" · Bold: "+money(r.cdtB)+".";
+  capitalSummary.textContent="Capital total asignado: "+money(d.pocket.capital+d.cdt.capital)+
+   ". Confirma que son montos diferentes disponibles simultáneamente.";
+
+  warningsUI.textContent=w.notes;
+  horizonUI.caption.textContent="Beneficio integral · "+d.horizon+" meses";
+  basis.textContent=w.mismatch?"PROVISIONAL · Ventas del módulo 2 · Sin impuestos.":
+   "Costos y rendimientos brutos comparados · Sin impuestos.";
+
+  if(r.missingTicket){
+   [
+    effectiveA,effectiveB,commissionAOut,commissionBOut,commissionDiffOut,
+    grossAUI.amount,grossBUI.amount,integralUI.amount,annualUI.amount,horizonUI.amount,
+    opSavingUI.amount,rbCommission.a,rbCommission.b,rbNet.a,rbNet.b
+   ].forEach(blank);
+   commercial.textContent="Falta ticket promedio para completar los cargos fijos y el resultado integral.";
+   exportHelp.textContent="PDF no disponible: falta ticket promedio.";
+   pdfButton.disabled=true;printArea.textContent="Falta ticket promedio.";pendingCharts();
+   return;
+  }
+
+  effectiveA.textContent=r.volume>0?pct(r.commissionA/r.volume*100):"—";
+  effectiveB.textContent=r.volume>0?pct(r.commissionB/r.volume*100):"—";
+  cash(commissionAOut,r.commissionA);cash(commissionBOut,r.commissionB);
+  cash(commissionDiffOut,r.commissionA-r.commissionB,true);
+  cash(grossAUI.amount,r.totalA);cash(grossBUI.amount,r.totalB);
+  cash(integralUI.amount,r.integral,true);cash(annualUI.amount,r.annual,true);
+  cash(horizonUI.amount,r.accumulated,true);
+  [
+   [rbCommission,r.commissionA,r.commissionB],
+   [rbServices,r.serviceA,r.serviceB],[rbPos,r.posA,r.posB],
+   [rbPocket,r.pocketA,r.pocketB],[rbCdt,r.cdtA,r.cdtB],[rbNet,r.netA,r.netB]
+  ].forEach(([row,a,b])=>{cash(row.a,a);cash(row.b,b);});
+  cash(opSavingUI.amount,r.opSaving,true);cash(pocketDiffUI.amount,r.pocketDiff,true);
+  cash(cdtDiffUI.amount,r.cdtDiff,true);
+  cash(opportunityUI.amount,r.pocketDiff+r.cdtDiff,true);
+  commercial.textContent=message(r);equilibriumUI.textContent=equilibrium(r);
+  drawCharts(d,r);
+
+  pdfButton.disabled=w.reasons.length>0;
+  if(!w.reasons.length){
+   renderPrint(d,r,w.notes);
+   exportHelp.textContent="PDF disponible: pulsa Exportar PDF y elige Guardar como PDF. "+
+    "Recomendado: A4 vertical, escala 100%, sin encabezados ni pies del navegador.";
+  }else{
+   exportHelp.textContent="Para habilitar el PDF: "+w.reasons.join("; ")+".";
+   printArea.textContent=exportHelp.textContent;
+  }
+ }
+
+ // PDF: colgroup fijo y alineación idéntica en encabezados y cifras.
+ function pdfTable(parent,headers,widths,rows){
+  const t=make("table",parent,"pdf-table");
+  const group=make("colgroup",t);
+  widths.forEach(width=>{const c=make("col",group);c.style.width=width+"%";});
+  const tr=make("tr",make("thead",t));
+  headers.forEach(h=>make("th",tr,"",h));
+  const body=make("tbody",t);
+  rows.forEach(values=>{
+   const row=make("tr",body);values.forEach(v=>make("td",row,"",v));
+  });
+ }
+ function renderPrint(d,r,warning){
+  printArea.textContent="";
+  const head=make("div",printArea,"print-head");
+  make("h1",head,"","Simulación del ecosistema Bold");
+  make("p",head,"",d.merchant+" · "+(d.date?d.date.split("-").reverse().join("/"):"Sin fecha"));
+  make("p",head,"","Ejecutivo: "+d.executive+" · Actual: "+d.bank);
+  make("p",printArea,"","COP · Rendimientos brutos · Sin impuestos ni retenciones");
+  make("p",printArea,"","Ventas: "+money(d.declared)+" · Ticket: "+money(d.ticket)+
+   " · Pagos estimados: "+df.format(r.payments));
+
+  const grid=make("div",printArea,"print-grid");
+  const first=make("div",grid,"print-box");
+  make("h2",first,"","Beneficio integral mensual equivalente");
+  make("div",first,"print-value",money(r.integral));
+  make("p",first,"","Ahorro operativo: "+money(r.opSaving));
+  make("p",first,"","Rendimiento adicional Bolsillo: "+money(r.pocketDiff));
+  make("p",first,"","Rendimiento adicional CDT equivalente: "+money(r.cdtDiff));
+  const second=make("div",grid,"print-box");
+  make("h2",second,"","Beneficio integral proyectado");
+  make("p",second,"","Primeros 12 meses: "+money(r.annual));
+  make("p",second,"",d.horizon+" meses: "+money(r.accumulated));
+  make("p",second,"","Crecimiento de ventas mensual: "+pct(d.growth*100));
+  make("p",second,"","Incluye atribución de intereses CDT durante el plazo, "+
+   "sin renovación ni reinversión. No es una proyección de cobros mensuales.");
+
+  make("h2",printArea,"","Costo mensual del ecosistema");
+  pdfTable(printArea,["Componente","Actual","Bold"],[48,26,26],[
+   ["Comisiones",money(r.commissionA),money(r.commissionB)],
+   ["Costos asociados",money(r.serviceA),money(r.serviceB)],
+   ["Software POS",money(r.posA),money(r.posB)],
+   ["Total operativo",money(r.totalA),money(r.totalB)],
+   ["Rendimiento Bolsillo",money(r.pocketA),money(r.pocketB)],
+   ["Rendimiento CDT mensual equivalente",money(r.cdtA),money(r.cdtB)],
+   ["Costo menos rendimientos · equivalente",money(r.netA),money(r.netB)]
+  ]);
+  make("p",printArea,"","Los rendimientos no reducen las facturas del proveedor. "+
+   "Un costo ajustado negativo indica excedente financiero estimado. "+
+   "El equivalente CDT no es un pago mensual ni saldo inmediatamente disponible.");
+
+  make("h2",printArea,"","Rentabilidad Bolsillo · saldo disponible según condiciones del producto");
+  make("p",printArea,"","Saldo promedio común: "+money(d.pocket.capital));
+  pdfTable(printArea,["Concepto","Actual","Bold"],[48,26,26],[
+   ["Tasa E.A.",pct(d.pocket.rateA*100),pct(d.pocket.rateB*100)],
+   ["Rendimiento mensual estimado",money(r.pocketA),money(r.pocketB)]
+  ]);
+  make("h2",printArea,"","CDT · tasa fija durante el plazo");
+  make("p",printArea,"","Capital común: "+money(d.cdt.capital)+
+   " · Plazo: "+df.format(d.cdt.days)+" días · Base 365");
+  pdfTable(printArea,["Concepto","Actual","Bold"],[48,26,26],[
+   ["Tasa E.A.",pct(d.cdt.rateA*100),pct(d.cdt.rateB*100)],
+   ["Intereses al vencimiento",money(r.termA),money(r.termB)],
+   ["Capital + intereses al vencimiento",
+    money(d.cdt.capital+r.termA),money(d.cdt.capital+r.termB)],
+   ["Intereses mensuales equivalentes",money(r.cdtA),money(r.cdtB)]
+  ]);
+
+  make("h2",printArea,"","Tarifas de pagos · porcentaje + fijo por pago");
+  pdfTable(printArea,["Franquicia","Ventas","Actual","Bold"],[24,26,25,25],
+   r.brands.map(b=>[b.name,money(b.volume),
+    pct(b.rateA*100)+" + "+money(b.fixedA),
+    pct(b.rateB*100)+" + "+money(b.fixedB)]));
+  make("h2",printArea,"","Costos asociados mensuales");
+  pdfTable(printArea,["Concepto","Actual","Bold"],[48,26,26],
+   r.costs.map(c=>[c.name,money(c.costA),money(c.costB)]));
+  make("h2",printArea,"","Software POS mensual");
+  pdfTable(printArea,["Concepto","Actual","Bold"],[48,26,26],
+   r.pos.map(p=>[p.name,money(p.costA),money(p.costB)]));
+  make("h2",printArea,"","Equilibrio operativo · excluye rentabilidad");
+  make("p",printArea,"",equilibrium(r));
+  make("p",printArea,"","Conclusión: "+message(r));
+  if(warning)make("p",printArea,"",warning);
+  const legal=make("div",printArea,"legal");
+  make("p",legal,"",
+   "Supuestos: ticket y mezcla constantes; pagos estimados, no conteo real. "+
+   "Ventas y pagos crecen; servicios y POS constantes. "+
+   "Bolsillo con saldo y tasa constantes, sin reinversión. "+
+   "CDT sin renovación, tasa fija y pago al vencimiento; atribución analítica "+
+   "lineal de intereses durante el plazo, no liquidación anticipada. "+
+   "Mes analítico = 365/12 días. Capitales Bolsillo y CDT separados, "+
+   "iguales entre proveedores. Rendimientos brutos, sin impuestos, retenciones "+
+   "ni costos no ingresados. Confirma condiciones y disponibilidad de los productos. "+
+   "Cálculos sin redondeos intermedios; cifras mostradas redondeadas a pesos.");
+  make("strong",legal,"",LEGAL);
+ }
+
+ function update(){
+  try{
+   const errors=validate(false);
+   const d=errors.length?null:read();
+   if(d&&d.cdt.capital>0&&d.cdt.days<=0){
+    errors.push("El plazo CDT debe ser mayor que cero cuando hay capital.");
+    cdtDays.classList.add("invalid");
+   }
+   if(errors.length){
+    errorBox.hidden=false;errorBox.textContent=errors.join(" ");
+    estimate.textContent="—";invalidate("Corrige los campos marcados.");return;
+   }
+   errorBox.hidden=true;errorBox.textContent="";
+   const r=calculate(d);
+   if(![r.totalA,r.totalB,r.integral,r.annual,r.accumulated,r.payments,r.termA,r.termB]
+    .every(Number.isFinite)){
+    invalidate("Valores fuera de capacidad de cálculo. Revisa los importes y tasas.");return;
+   }
+   estimate.textContent=d.ticket>0?"≈ "+df.format(d.declared/d.ticket):
+    d.declared>0?"Ingresa ticket promedio":"0";
+   const diff=d.declared-r.volume;
+   allocation.textContent="Distribuido en franquicias: "+money(r.volume)+
+    " · Diferencia: "+money(diff);
+   allocation.className="help "+(Math.abs(diff)>0.01?"neg":"pos");
+   current={data:d,result:r};render(d,r,warnings(d,r));
+  }catch(error){invalidate("Error de ejecución.");report(error);}
+ }
+
+ function sample(){
+  const volumes=[30000000,20000000,5000000,0,15000000,0];
+  const a=[1.8,1.9,2.6,0,1.4,0],b=[2.2,2.3,3,0,1.8,0];
+  const f=[1,1,40,20,20,2,1,1,1,0];
+  const u=[80000,20000,6000,5000,5000,80000,40000,30000,30000,0];
+  const qa=[2,1,1],ua=[120000,50000,30000],qb=[2,1,1],ub=[70000,0,0];
+  return {
+   declared:70000000,ticket:100000,growth:0,horizon:12,
+   brands:BRANDS.map((name,i)=>({name,volume:volumes[i],rateA:a[i]/100,
+    rateB:b[i]/100,fixedA:0,fixedB:i<2?200:0})),
+   costs:SERVICES.map((name,i)=>({name,frequency:f[i],unitA:u[i],unitB:0})),
+   pos:POS.map((name,i)=>({name,quantityA:qa[i],unitA:ua[i],
+    quantityB:qb[i],unitB:ub[i]})),
+   pocket:{capital:20000000,rateA:0,rateB:0.10},
+   cdt:{capital:30000000,days:365,rateA:0.08,rateB:0.10}
+  };
+ }
+ function loadExample(){
+  const d=sample();
+  merchant.value="Comercio de ejemplo";executive.value="Asesor de ejemplo";
+  bank.value="Banco de ejemplo";declared.value=d.declared;ticket.value=d.ticket;
+  growth.value="0";horizon.value="12";
+  d.brands.forEach((b,i)=>{
+   const r=brandUI[i];r.volume.value=b.volume;
+   r.rateA.value=Number((b.rateA*100).toFixed(8));
+   r.rateB.value=Number((b.rateB*100).toFixed(8));
+   r.fixedA.value=b.fixedA;r.fixedB.value=b.fixedB;
+  });
+  d.costs.forEach((c,i)=>{
+   const r=serviceUI[i];r.concept.value=c.name;r.frequency.value=c.frequency;
+   r.unitA.value=c.unitA;r.unitB.value=c.unitB;
+  });
+  d.pos.forEach((p,i)=>{
+   const r=posUI[i];r.concept.value=p.name;
+   r.quantityA.value=p.quantityA;r.unitA.value=p.unitA;
+   r.quantityB.value=p.quantityB;r.unitB.value=p.unitB;
+  });
+  pocketCapital.value=d.pocket.capital;pocketRateA.value="0";pocketRateB.value="10";
+  cdtCapital.value=d.cdt.capital;cdtDays.value=d.cdt.days;cdtRateA.value="8";cdtRateB.value="10";
+  exampleMode=true;update();
+ }
+ function clearData(){
+  [merchant,executive,bank,declared,ticket].forEach(e=>e.value="");
+  growth.value="0";horizon.value="12";
+  brandUI.forEach(r=>[r.volume,r.rateA,r.rateB,r.fixedA,r.fixedB].forEach(e=>e.value=""));
+  serviceUI.forEach((r,i)=>{
+   r.concept.value=SERVICES[i];r.frequency.value="";r.unitA.value="";r.unitB.value="0";
+  });
+  posUI.forEach((r,i)=>{
+   r.concept.value=POS[i];[r.quantityA,r.unitA,r.quantityB,r.unitB].forEach(e=>e.value="0");
+  });
+  [pocketCapital,pocketRateA,pocketRateB,cdtCapital,cdtRateA,cdtRateB].forEach(e=>e.value="0");
+  cdtDays.value="180";exampleMode=false;update();
+ }
+ function applyConfig(){
+  if(cfgFields.disabled)return;
+  const errors=validate(true);
+  if(errors.length){cfgStatus.textContent=errors.join(" ");return;}
+  cfgUI.forEach((c,i)=>{brandUI[i].rateB.value=val(c.rate);brandUI[i].fixedB.value=val(c.fixed);});
+  cfgStatus.textContent="Tarifas aplicadas.";update();
+ }
+
+ function runTests(){
+  const tests=[],near=(a,b)=>Math.abs(a-b)<0.01;
+  const check=(name,ok)=>tests.push({prueba:name,resultado:ok?"OK":"ERROR"});
+  const r=calculate(sample());
+  check("Pagos",near(r.payments,700));
+  check("Operación actual",near(r.totalA,2380000));
+  check("Operación Bold",near(r.totalB,1780000));
+  check("Ahorro operativo",near(r.opSaving,600000));
+  check("CDT actual al vencimiento",near(r.termA,2400000));
+  check("CDT Bold al vencimiento",near(r.termB,3000000));
+  check("CDT adicional mensual equivalente",near(r.cdtDiff,50000));
+  check("Beneficio mensual",near(r.integral,650000+r.pocketDiff));
+  check("Beneficio anual",near(r.annual,7800000+r.pocketDiff*12));
+  check("Conciliación de costos ajustados",near(r.netA-r.netB,r.integral));
+
+  const long=sample();long.horizon=24;
+  const lr=calculate(long);
+  check("CDT sin renovación",
+   near(lr.months.reduce((s,m)=>s+m.cdtAccrued,0),600000));
+  check("Año dos sin nuevos intereses CDT",
+   near(lr.months.slice(12).reduce((s,m)=>s+m.cdtAccrued,0),0));
+
+  const short=sample();short.cdt.days=180;
+  const sr=calculate(short);
+  check("CDT corto no se renueva",
+   near(sr.months.reduce((s,m)=>s+m.cdtAccrued,0),sr.termB-sr.termA));
+
+  const one=sample();
+  one.brands=[{name:"Visa",volume:10000000,rateA:0.018,rateB:0.0229,fixedA:0,fixedB:200}];
+  check("Tarifa 2,29% + $200",near(calculate(one).commissionB,249000));
+
+  const lower=sample();lower.ticket=50000;
+  check("Ticket menor",near(calculate(lower).opSaving,500000));
+
+  SERVICES.forEach((_,i)=>{
+   const d=sample();d.costs=d.costs.map((c,j)=>({
+    name:c.name,frequency:i===j?3:0,unitA:100,unitB:20}));
+   const t=calculate(d);
+   check("Servicio independiente "+(i+1),near(t.serviceA-t.serviceB,240));
+  });
+  POS.forEach((_,i)=>{
+   const d=sample();d.pos=d.pos.map((p,j)=>({
+    name:p.name,quantityA:i===j?2:0,unitA:100,quantityB:i===j?1:0,unitB:30}));
+   const t=calculate(d);check("POS independiente "+(i+1),near(t.posA-t.posB,170));
+  });
+  const failures=tests.filter(t=>t.resultado==="ERROR");
+  testStatus.textContent=failures.length?failures.length+" pruebas con error.":
+   tests.length+" pruebas del motor correctas.";
+  testStatus.className="help "+(failures.length?"neg":"pos");
+  console.table(tests);return failures.length===0;
+ }
+
+ exampleButton.addEventListener("click",guard(loadExample));
+ clearButton.addEventListener("click",guard(clearData));
+ testButton.addEventListener("click",guard(runTests));
+ applyButton.addEventListener("click",guard(applyConfig));
+ unlock.addEventListener("change",()=>cfgFields.disabled=!unlock.checked);
+ root.addEventListener("input",event=>{
+  if(!event.target.matches("input,select"))return;
+  if(cfgFields.contains(event.target)){cfgStatus.textContent="Cambios pendientes.";return;}
+  update();
+ });
+ root.addEventListener("change",event=>{
+  if(event.target===unlock||cfgFields.contains(event.target))return;
+  if(event.target.matches("input,select"))update();
+ });
+ function restoreTitle(){
+  if(previousTitle!==null){document.title=previousTitle;previousTitle=null;}
+ }
+ pdfButton.addEventListener("click",guard(()=>{
+  update();if(!current||pdfButton.disabled)return;
+  restoreTitle();previousTitle=document.title;
+  const name=current.data.merchant.replace(/[\\/:*?"<>|]/g,"").replace(/\s+/g,"_").slice(0,70);
+  document.title="Simulacion_Bold_"+(name||"Comercio")+"_"+(current.data.date||"sin_fecha");
+  try{window.print();}catch(error){restoreTitle();throw error;}
+ }));
+ window.addEventListener("beforeprint",update);
+ window.addEventListener("afterprint",restoreTitle);
+ const today=new Date();
+ date.value=today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,"0")+
+  "-"+String(today.getDate()).padStart(2,"0");
+
+ update();
+ if(!runTests())throw new Error("Fallaron las pruebas internas del motor.");
+ status.textContent="Calculadora activa · V6";status.className="status ok";
+}
+})();
+</script>
+</body>
+</html>
+
+							<script>
+                            	
+							</script>
+                        </body>
+                        </html>
+                    
